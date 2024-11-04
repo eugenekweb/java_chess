@@ -9,9 +9,15 @@ public class King extends ChessPiece {
     @Override
     public boolean canMoveToPosition(ChessBoard board, int line, int column, int toLine, int toColumn) {
         if (ChessBoard.checkPos(toLine) && ChessBoard.checkPos(toColumn)) {
-            if (line != toLine && Math.abs(line - toLine) == Math.abs(column - toColumn)) return true;
+            int steps = Math.abs(line - toLine) + Math.abs(column - toColumn);
+            boolean isDiagonalMove = line != toLine && column != toColumn && (steps == 2);
+            if (isDiagonalMove || steps == 1) return true;
             else return false;
         } else return false;
     }
 
+    public boolean isUnderAttack(ChessBoard board, int line, int column) {
+
+        return true;
+    }
 }

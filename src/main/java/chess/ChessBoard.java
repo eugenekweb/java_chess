@@ -19,6 +19,7 @@ public class ChessBoard {
 
             if (board[startLine][startColumn].canMoveToPosition(this, startLine, startColumn, endLine, endColumn)) {
                 board[endLine][endColumn] = board[startLine][startColumn]; // if piece can move, we moved a piece
+                board[endLine][endColumn].check = false;
                 board[startLine][startColumn] = null; // set null to previous cell
                 this.nowPlayer = this.nowPlayerColor().equals("White") ? "Black" : "White";
 
@@ -55,5 +56,98 @@ public class ChessBoard {
 
     public static boolean checkPos(int pos) {
         return pos >= 0 && pos <= 7;
+    }
+
+    public boolean castling0() {
+        if (nowPlayer.equalsIgnoreCase("White")) {
+            if (board[0][0] == null || board[0][4] == null) return false;
+            if (board[0][0].getName().equalsIgnoreCase("Rook")
+                    && board[0][4].getName().equalsIgnoreCase("King")
+                    && board[0][1] == null && board[0][2] == null && board[0][3] == null) {
+                if (board[0][0].getColor().equalsIgnoreCase("White")
+                        && board[0][4].getColor().equalsIgnoreCase("White")
+                        && board[0][0].check && board[0][4].check
+                        && new King("White").isUnderAttack(this, 0, 2)) {
+                    board[0][4] = null;
+                    board[0][2] = new King("White");
+                    board[0][2].check = false;
+                    board[0][0] = null;
+                    board[0][3] = new Rook("White");
+                    board[0][3].check = false;
+                    nowPlayer = "Black";
+                    return true;
+                } else return false;
+            } else return false;
+        } else {
+            if (board[7][0] == null || board[7][4] == null) return false;
+            if (board[7][0].getName().equalsIgnoreCase("Rook")
+                    && board[7][4].getName().equalsIgnoreCase("King")
+                    && board[7][1] == null && board[7][2] == null && board[7][3] == null) {
+                if (board[7][0].getColor().equalsIgnoreCase("Black")
+                        && board[7][4].getColor().equalsIgnoreCase("Black")
+                        && board[7][0].check && board[7][4].check
+                        && new King("Black").isUnderAttack(this, 7, 2)) {
+                    board[7][4] = null;
+                    board[7][2] = new King("Black");
+                    board[7][2].check = false;
+                    board[7][0] = null;
+                    board[7][3] = new Rook("Black");
+                    board[7][3].check = false;
+                    nowPlayer = "White";
+                    return true;
+                } else return false;
+            } else return false;
+        }
+    }
+
+    public boolean castling7() {
+        if (nowPlayer.equalsIgnoreCase("White")) {
+            if (board[0][7] == null || board[0][4] == null) return false;
+            if (board[0][7].getName().equalsIgnoreCase("Rook")
+                    && board[0][4].getName().equalsIgnoreCase("King")
+                    && board[0][5] == null && board[0][6] == null) {
+                if (board[0][7].getColor().equalsIgnoreCase("White")
+                        && board[0][4].getColor().equalsIgnoreCase("White")
+                        && board[0][7].check && board[0][4].check
+                        && new King("White").isUnderAttack(this, 0, 6)) {
+                    board[0][4] = null;
+                    board[0][6] = new King("White");
+                    board[0][6].check = false;
+                    board[0][7] = null;
+                    board[0][5] = new Rook("White");
+                    board[0][5].check = false;
+                    nowPlayer = "Black";
+                    return true;
+                } else return false;
+            } else return false;
+        } else {
+            if (board[7][7] == null || board[7][4] == null) return false;
+            if (board[7][7].getName().equalsIgnoreCase("Rook")
+                    && board[7][4].getName().equalsIgnoreCase("King")
+                    && board[7][5] == null && board[7][6] == null) {
+                if (board[7][7].getColor().equalsIgnoreCase("Black")
+                        && board[7][4].getColor().equalsIgnoreCase("Black")
+                        && board[7][7].check && board[7][4].check
+                        && new King("Black").isUnderAttack(this, 7, 6)) {
+                    board[7][4] = null;
+                    board[7][6] = new King("Black");
+                    board[7][6].check = false;
+                    board[7][7] = null;
+                    board[7][5] = new Rook("Black");
+                    board[7][5].check = false;
+                    nowPlayer = "White";
+                    return true;
+                } else return false;
+            } else return false;
+        }
+    }
+
+    private boolean isFreeWay(int line, int column, int toLine, int toColumn) {
+        if (board[line][column].getName().equalsIgnoreCase("Horse")) return true;
+        boolean result = true;
+        for (int i = 0; i < toLine; i++) {
+            
+        }
+        return result;
     }
 }

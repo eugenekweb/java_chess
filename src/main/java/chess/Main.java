@@ -66,19 +66,19 @@ public class Main {
             } else {
                 if (s.equals("castling0")) {
                     System.out.println("Рокировка");
-//                    if (board.castling0()) {
-//                        System.out.println("Рокировка удалась");
-//                        board.printBoard();
-//                    } else {
-//                        System.out.println("Рокировка не удалась");
-//                    }
-//                } else if (s.equals("castling7")) {
-//                    if (board.castling7()) {
-//                        System.out.println("Рокировка удалась");
-//                        board.printBoard();
-//                    } else {
-//                        System.out.println("Рокировка не удалась");
-//                    }
+                    if (board.castling0()) {
+                        System.out.println("Рокировка удалась");
+                        board.printBoard();
+                    } else {
+                        System.out.println("Рокировка не удалась");
+                    }
+                } else if (s.equals("castling7")) {
+                    if (board.castling7()) {
+                        System.out.println("Рокировка удалась");
+                        board.printBoard();
+                    } else {
+                        System.out.println("Рокировка не удалась");
+                    }
                 } else if (s.contains("move")) {
                     String[] a = s.split(" ");
                     try {
