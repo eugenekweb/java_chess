@@ -18,50 +18,50 @@ public class ChessBoard {
             if (!nowPlayer.equals(board[startLine][startColumn].getColor())) return false;
 
             if (board[startLine][startColumn].canMoveToPosition(this, startLine, startColumn, endLine, endColumn)) {
-                if (board[startLine][startColumn].getName().equalsIgnoreCase("king")) {
+                // check if King is under attack
+                if (board[startLine][startColumn] instanceof King) {
                     if (((King) board[startLine][startColumn]).isUnderAttack(this, endLine, endColumn)) return false;
                 }
+                // check if Piece has clear way to end point
                 if (!isFreeWay(startLine, startColumn, endLine, endColumn)) return false;
-                if (board[endLine][endColumn] != null) {
-                    if (board[startLine][startColumn].getColor().equals(board[endLine][endColumn].getColor()))
-                        return false;
-                    else
-                        System.out.printf("%s %s ест %s %s%n", board[startLine][startColumn].getColor(), board[startLine][startColumn].getName(), board[endLine][endColumn].getColor(), board[endLine][endColumn].getName());
-                }
+
+                // eat or move
+                if (board[endLine][endColumn] != null
+                        && !isMovingOrEating(startLine, startColumn, endLine, endColumn))
+                    return false;
+
                 board[endLine][endColumn] = board[startLine][startColumn]; // if piece can move, we moved a piece
                 board[endLine][endColumn].check = false;
                 board[startLine][startColumn] = null; // set null to previous cell
                 this.nowPlayer = this.nowPlayerColor().equals("White") ? "Black" : "White";
-
                 return true;
             } else return false;
         } else return false;
     }
 
     public void printBoard() {  //print board in console
-        System.out.println("Turn " + nowPlayer);
+        System.out.println("Переход хода к " + nowPlayer);
         System.out.println();
         System.out.println(" ".repeat(18) + "Player 2 (Black)");
-//        System.out.println();
         System.out.println("\t0\t1\t2\t3\t4\t5\t6\t7");
-//        System.out.println("\tA\tB\tC\tD\tE\tF\tG\tH");
 
         for (int i = 7; i > -1; i--) {
             System.out.print((i) + "\s\s\s");
-//            System.out.print((i + 1) + "\s\s\s");
             for (int j = 0; j < 8; j++) {
                 if (board[i][j] == null) {
                     char square = (i + j) % 2 == 0 ? '\u25A1' : '\u25A0';
                     System.out.print(square + "\s\s\s");
                 } else {
-                    System.out.print(board[i][j].getSymbol() + "\t"); // + board[i][j].getColor().substring(0, 1).toLowerCase() + "\t");
+                    System.out.print(board[i][j].getSymbol() + "\t");
                 }
             }
-//            System.out.println();
             System.out.println();
         }
         System.out.println("Player 1 (White)");
         System.out.println("-".repeat(34));
+        int[] kingPosition = getKingPosition(nowPlayer);
+        ((King) board[kingPosition[0]][kingPosition[1]]).checkCheck(this, kingPosition[0], kingPosition[1]);
+
     }
 
     public static boolean checkPos(int pos) {
@@ -152,15 +152,15 @@ public class ChessBoard {
         }
     }
 
-    private boolean isFreeWay(int line, int column, int toLine, int toColumn) {
-        if (board[line][column].getName().equalsIgnoreCase("Horse")) return true;
-        int lineStep = Integer.signum(toLine - line);
-        int columnStep = Integer.signum(toColumn - column);
+    public boolean isFreeWay(int startLine, int startColumn, int endLine, int endColumn) {
+        if (board[startLine][startColumn].getName().equalsIgnoreCase("Horse")) return true;
+        int lineStep = Integer.signum(endLine - startLine);
+        int columnStep = Integer.signum(endColumn - startColumn);
 
-        int currentLine = line + lineStep;
-        int currentColumn = column + columnStep;
+        int currentLine = startLine + lineStep;
+        int currentColumn = startColumn + columnStep;
 
-        while (currentLine != toLine || currentColumn != toColumn) {
+        while (currentLine != endLine || currentColumn != endColumn) {
             if (board[currentLine][currentColumn] != null) {
                 return false;
             }
@@ -169,5 +169,27 @@ public class ChessBoard {
         }
         return true;
 
+    }
+
+    private boolean isMovingOrEating(int startLine, int startColumn, int endLine, int endColumn) {
+        if (board[startLine][startColumn].getColor().equals(board[endLine][endColumn].getColor()))
+            return false;
+        else
+            System.out.printf("%s %s ест %s %s%n", board[startLine][startColumn].getColor(), board[startLine][startColumn].getName(), board[endLine][endColumn].getColor(), board[endLine][endColumn].getName());
+        return true;
+    }
+
+    private int[] getKingPosition(String color) {
+        int[] kingPosition = new int[2];
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (board[i][j] instanceof King && board[i][j].getColor().equals(color)) {
+                    kingPosition[0] = i;
+                    kingPosition[1] = j;
+                    break;
+                }
+            }
+        }
+        return kingPosition;
     }
 }
