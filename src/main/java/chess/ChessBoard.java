@@ -18,6 +18,16 @@ public class ChessBoard {
             if (!nowPlayer.equals(board[startLine][startColumn].getColor())) return false;
 
             if (board[startLine][startColumn].canMoveToPosition(this, startLine, startColumn, endLine, endColumn)) {
+                if (board[startLine][startColumn].getName().equalsIgnoreCase("king")) {
+                    if (((King) board[startLine][startColumn]).isUnderAttack(this, endLine, endColumn)) return false;
+                }
+                if (!isFreeWay(startLine, startColumn, endLine, endColumn)) return false;
+                if (board[endLine][endColumn] != null) {
+                    if (board[startLine][startColumn].getColor().equals(board[endLine][endColumn].getColor()))
+                        return false;
+                    else
+                        System.out.printf("%s %s ест %s %s%n", board[startLine][startColumn].getColor(), board[startLine][startColumn].getName(), board[endLine][endColumn].getColor(), board[endLine][endColumn].getName());
+                }
                 board[endLine][endColumn] = board[startLine][startColumn]; // if piece can move, we moved a piece
                 board[endLine][endColumn].check = false;
                 board[startLine][startColumn] = null; // set null to previous cell
@@ -67,7 +77,7 @@ public class ChessBoard {
                 if (board[0][0].getColor().equalsIgnoreCase("White")
                         && board[0][4].getColor().equalsIgnoreCase("White")
                         && board[0][0].check && board[0][4].check
-                        && new King("White").isNotUnderAttack(this, 0, 2)) {
+                        && !(new King("White").isUnderAttack(this, 0, 2))) {
                     board[0][4] = null;
                     board[0][2] = new King("White");
                     board[0][2].check = false;
@@ -86,7 +96,7 @@ public class ChessBoard {
                 if (board[7][0].getColor().equalsIgnoreCase("Black")
                         && board[7][4].getColor().equalsIgnoreCase("Black")
                         && board[7][0].check && board[7][4].check
-                        && new King("Black").isNotUnderAttack(this, 7, 2)) {
+                        && !(new King("Black").isUnderAttack(this, 7, 2))) {
                     board[7][4] = null;
                     board[7][2] = new King("Black");
                     board[7][2].check = false;
@@ -109,7 +119,7 @@ public class ChessBoard {
                 if (board[0][7].getColor().equalsIgnoreCase("White")
                         && board[0][4].getColor().equalsIgnoreCase("White")
                         && board[0][7].check && board[0][4].check
-                        && new King("White").isNotUnderAttack(this, 0, 6)) {
+                        && !(new King("White").isUnderAttack(this, 0, 6))) {
                     board[0][4] = null;
                     board[0][6] = new King("White");
                     board[0][6].check = false;
@@ -128,7 +138,7 @@ public class ChessBoard {
                 if (board[7][7].getColor().equalsIgnoreCase("Black")
                         && board[7][4].getColor().equalsIgnoreCase("Black")
                         && board[7][7].check && board[7][4].check
-                        && new King("Black").isNotUnderAttack(this, 7, 6)) {
+                        && !(new King("Black").isUnderAttack(this, 7, 6))) {
                     board[7][4] = null;
                     board[7][6] = new King("Black");
                     board[7][6].check = false;
@@ -144,10 +154,20 @@ public class ChessBoard {
 
     private boolean isFreeWay(int line, int column, int toLine, int toColumn) {
         if (board[line][column].getName().equalsIgnoreCase("Horse")) return true;
-        boolean result = true;
-        for (int i = 0; i < toLine; i++) {
-            
+        int lineStep = Integer.signum(toLine - line);
+        int columnStep = Integer.signum(toColumn - column);
+
+        int currentLine = line + lineStep;
+        int currentColumn = column + columnStep;
+
+        while (currentLine != toLine || currentColumn != toColumn) {
+            if (board[currentLine][currentColumn] != null) {
+                return false;
+            }
+            currentLine += lineStep;
+            currentColumn += columnStep;
         }
-        return result;
+        return true;
+
     }
 }

@@ -11,10 +11,10 @@ public class Main {
 //        board.board[0][2] = new Bishop("White");
 //        board.board[0][3] = new Queen("White");
         board.board[0][4] = new King("White");
-        board.board[0][5] = new Bishop("White");
-        board.board[0][6] = new Horse("White");
+//        board.board[0][5] = new Bishop("White");
+//        board.board[0][6] = new Horse("White");
         board.board[0][7] = new Rook("White");
-//        board.board[1][0] = new Pawn("White");
+        board.board[1][0] = new Pawn("White");
 //        board.board[1][1] = new Pawn("White");
 //        board.board[1][2] = new Pawn("White");
 //        board.board[1][3] = new Pawn("White");
@@ -22,7 +22,8 @@ public class Main {
 //        board.board[1][5] = new Pawn("White");
 //        board.board[1][6] = new Pawn("White");
 //        board.board[1][7] = new Pawn("White");
-        board.board[2][2] = new Queen("Black");
+
+        board.board[2][0] = new Pawn("Black");
 
 
         board.board[7][0] = new Rook("Black");
@@ -88,11 +89,11 @@ public class Main {
                         int column = Integer.parseInt(a[2]);
                         int toLine = Integer.parseInt(a[3]);
                         int toColumn = Integer.parseInt(a[4]);
-                        System.out.println("Figure - " + board.board[line][column].getSymbol() + board.board[line][column].getColor());
+                        System.out.println("Ход - " + board.board[line][column].getSymbol() + " (" + board.board[line][column].getColor() + " " + board.board[line][column].getName() + ")");
                         if (board.moveToPosition(line, column, toLine, toColumn)) {
-                            System.out.println("Успешно передвинулись");
+                            System.out.println("Ход завершен");
                             board.printBoard();
-                        } else System.out.println("Передвижение не удалось");
+                        } else System.out.println("Ход невозможен");
                     } catch (Exception e) {
                         System.out.println("Вы что-то ввели не так, попробуйте ещё раз");
                     }
